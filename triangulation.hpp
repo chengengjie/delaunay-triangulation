@@ -9,9 +9,10 @@
 class Triangulation {
 public:
     std::vector<Point> points;
+    int numEdges;
 
     void run();
-    void write(const std::string& fileName, bool debug = false);
+    void write(const std::string& fileName);
 
 private:
     std::vector<std::shared_ptr<Face>> ptFaces;             // point idx -> face

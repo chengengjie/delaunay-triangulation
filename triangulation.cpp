@@ -50,7 +50,7 @@ void Triangulation::init() {
 void Triangulation::insertPoint(int ptIdx) {
     auto face = ptFaces[ptIdx];
     auto centerVertex = std::make_shared<Vertex>(points[ptIdx]);
-    // centerVertex->idx = ptIdx;
+    centerVertex->idx = ptIdx;
     vertices.push_back(centerVertex);
     // store inner edges
     std::vector<std::shared_ptr<HalfEdge>> innerEdges;
@@ -140,49 +140,37 @@ void Triangulation::swapTest(std::shared_ptr<HalfEdge> edge) {
     }
 }
 
-void Triangulation::write(const std::string& fileName, bool debug) {
-    // loci
-    std::vector<Point> loci;
-    std::unordered_map<Point, int> locToIdxMap;
-    for (const auto& pt : points) {
-        locToIdxMap[pt] = loci.size();
-        loci.push_back(pt);
-    }
-    for (const auto& vertex : vertices) {
-        if (locToIdxMap.find(vertex->loc) == locToIdxMap.end()) {
-            locToIdxMap[vertex->loc] = loci.size();
-            loci.push_back(vertex->loc);
+void Triangulation::write(const std::string& fileName) {
+    auto iterateAllEdges = [&](std::function<void(std::shared_ptr<HalfEdge>)> handle) {
+        for (int i = 3; i < vertices.size(); ++i) { // the first three are dummy vertices
+            auto vertex = vertices[i];
+            auto edge = vertex->edge;
+            do {
+                if (edge->twin->org->idx >= 0 &&                // dst vertex should be an input point
+                    edge->org->idx < edge->twin->org->idx)  {   // visit once only
+                    handle(edge);
+                }
+                edge = edge->twin->next;
+            }
+            while (edge != vertex->edge);
         }
-    }
+    };
 
-    // adj lists
-    std::vector<std::vector<int>> adjLists(loci.size());
-    for (const auto& vertex : vertices) {
-        int idx = locToIdxMap[vertex->loc];
-        auto edge = vertex->edge;
-        do {
-            int adjIdx = locToIdxMap[edge->twin->org->loc];
-            adjLists[idx].push_back(adjIdx);
-            edge = edge->twin->next;
-        }
-        while (edge != vertex->edge);
-    }
+    // count
+    numEdges = 0;
+    iterateAllEdges([&](std::shared_ptr<HalfEdge> edge){
+        ++numEdges;
+    });
 
     // write
     std::ofstream ofs(fileName);
     if (ofs.fail()) {
         std::cout << "Cannot open output file " << fileName << ", skip..." << std::endl;
     }
-    for (int i = 0; i < loci.size(); ++i) {
-        if (debug || i < points.size()) {
-            ofs << i << " " << loci[i].x << " " << loci[i].y;
-            for (auto adj : adjLists[i]) {
-                if (debug || adj < points.size()) {
-                    ofs << " " << adj;
-                }
-            }
-            ofs << std::endl;
-        }
-    }
+    ofs << numEdges << std::endl;
+    iterateAllEdges([&](std::shared_ptr<HalfEdge> edge){
+        ofs << edge->org->loc.x << " " << edge->org->loc.y << " "
+            << edge->twin->org->loc.x << " " << edge->twin->org->loc.y << std::endl;
+    });
     ofs.close();
 }

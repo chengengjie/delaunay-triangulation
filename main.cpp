@@ -48,10 +48,10 @@ void run(std::string filename) {
     int begin = filename.find_last_of('/');
     int end = filename.find_last_of('.');
     std::string outputFilename = filename.substr(begin + 1, end - begin - 1) + "_output.txt";
-    trian.write(outputFilename, false);
+    trian.write(outputFilename);
 
-    std::cout   << "input = " << filename << ", #points = " << trian.points.size() 
-                << ", time = " << dur << ", output = " << outputFilename << std::endl;
+    std::cout   << "input=" << filename << ", #points=" << trian.points.size() << ", #edges=" << trian.numEdges
+                << ", time=" << dur << ", output=" << outputFilename << std::endl;
 }
 
 int main(int argc, char* argv[]) {

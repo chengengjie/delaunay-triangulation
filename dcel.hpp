@@ -9,7 +9,7 @@ class Face;
 class Vertex {
 public:
     Point loc;
-    // int idx = -1; // to remove
+    int idx = -1;
     std::shared_ptr<HalfEdge> edge;  // one of the leaving edges
 
     Vertex(double x, double y) : loc(x, y) {}
