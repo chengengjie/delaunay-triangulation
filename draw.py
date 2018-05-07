@@ -3,7 +3,7 @@
 import argparse, os
 import matplotlib.pyplot as plt
 
-parser = argparse.ArgumentParser(description='Draw Nets/Trees')
+parser = argparse.ArgumentParser(description='Draw triangulation')
 parser.add_argument('input_file_name')
 args = parser.parse_args()
 
@@ -24,7 +24,7 @@ for i in range(len(loci)):
     fromLoc = loci[i]
     for adj in adjLists[i]:
         toLoc = loci[adj]
-        plt.plot([fromLoc[0], toLoc[0]], [fromLoc[1], toLoc[1]], 'k')
+        plt.plot([fromLoc[0], toLoc[0]], [fromLoc[1], toLoc[1]], 'k', lw=1)
 
 # plot vertices
 for i in range(len(loci)):
@@ -35,4 +35,3 @@ plt.axis('square')
 plt.axis('off')
 base_name, _ = os.path.splitext(os.path.basename(args.input_file_name))
 plt.savefig(base_name + '.pdf', bbox_inches='tight')
-# plt.savefig(base_name + '.png', bbox_inches='tight')

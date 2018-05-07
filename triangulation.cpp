@@ -1,7 +1,4 @@
 #include "triangulation.hpp"
-#include <unordered_map>
-#include <fstream>
-#include <iostream>
 
 void Triangulation::run() {
     init();
