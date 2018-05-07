@@ -2,6 +2,7 @@
 
 std::ostream& operator<<(std::ostream& os, const Vertex& vertex) {
     os << vertex.loc;
+    // os << vertex.loc << "id=" << vertex.idx;
     return os;
 }
 

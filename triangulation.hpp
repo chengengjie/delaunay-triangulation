@@ -21,4 +21,6 @@ private:
 
     void init();
     void insertPoint(int ptIdx);
+    void rebucket(const std::vector<std::shared_ptr<Face>>& faces, const std::vector<int>& inputPts, std::vector<std::vector<int>>& pts);
+    void swapTest(std::shared_ptr<HalfEdge> edge);
 };

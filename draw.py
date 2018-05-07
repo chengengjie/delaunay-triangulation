@@ -29,6 +29,7 @@ for i in range(len(loci)):
 # plot vertices
 for i in range(len(loci)):
     plt.plot(loci[i][0], loci[i][1], c='k', marker='o', mew=0, ms=3)
+    # plt.text(loci[i][0] + .5, loci[i][1], str(i), fontsize=4)
 
 # format & save
 plt.axis('square')
