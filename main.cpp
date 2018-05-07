@@ -16,7 +16,7 @@ int main() {
     Triangulation trian;
     trian.points = points;
     trian.run();
-    trian.write("test" + std::to_string(points.size()) + ".txt", true);
+    trian.write("test" + std::to_string(points.size()) + ".txt", false);
 
     return 0;
 }

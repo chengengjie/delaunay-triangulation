@@ -135,6 +135,8 @@ void Triangulation::swapTest(std::shared_ptr<HalfEdge> edge) {
         for (int i = 0; i < faces.size(); ++i) {
             facePts[faces[i]] = pts[i];
         }
+        swapTest(edgePD->next);         // DB
+        swapTest(edgePD->twin->prev);   // DA
     }
 }
 
@@ -169,11 +171,15 @@ void Triangulation::write(const std::string& fileName, bool debug) {
     // write
     std::ofstream ofs(fileName);
     for (int i = 0; i < loci.size(); ++i) {
-        ofs << i << " " << loci[i].x << " " << loci[i].y;
-        for (auto adj : adjLists[i]) {
-            ofs << " " << adj;
+        if (debug || i < points.size()) {
+            ofs << i << " " << loci[i].x << " " << loci[i].y;
+            for (auto adj : adjLists[i]) {
+                if (debug || adj < points.size()) {
+                    ofs << " " << adj;
+                }
+            }
+            ofs << std::endl;
         }
-        ofs << std::endl;
     }
     ofs.close();
 }
