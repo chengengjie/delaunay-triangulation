@@ -61,7 +61,7 @@ int main(int argc, char* argv[]) {
     else if (argc == 2 && std::string(argv[1]) == "-b") {
         for (int numPoints = 10; numPoints <= 1000000; numPoints *= 10) {
             for (int i = 0; i < 3; ++i) {
-                run("input_points/points" + std::to_string(numPoints) + "_" + std::to_string(i) + ".txt");
+                run("data/input/points" + std::to_string(numPoints) + "_" + std::to_string(i) + ".txt");
             }
         }
     }

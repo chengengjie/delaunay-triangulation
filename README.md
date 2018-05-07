@@ -1,8 +1,23 @@
 # CSCI5010 Project - Incremental Delaunay Triangulation
 
-### 18 Spring
+### Gengjie Chen (SID: 1155067753)
 
-### Gengjie Chen
+### 2018 Spring
 
-### SID: 1155067753
+## Notes
 
+### Compile:
+```
+g++ -std=c++11 main.cpp triangulation.cpp dcel.cpp -o triangulation -O3 -DNDBUG
+```
+
+### Run:
+```
+./triangulation -f <input_file>
+```
+(For input file `xxx.txt`, the output file will be `xxx_output.txt`.)
+
+### Visualize:
+```
+./draw <output_file>
+```
