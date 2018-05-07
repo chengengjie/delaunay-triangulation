@@ -170,6 +170,9 @@ void Triangulation::write(const std::string& fileName, bool debug) {
 
     // write
     std::ofstream ofs(fileName);
+    if (ofs.fail()) {
+        std::cout << "Cannot open output file " << fileName << ", skip..." << std::endl;
+    }
     for (int i = 0; i < loci.size(); ++i) {
         if (debug || i < points.size()) {
             ofs << i << " " << loci[i].x << " " << loci[i].y;
