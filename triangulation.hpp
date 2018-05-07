@@ -3,6 +3,8 @@
 #include "dcel.hpp"
 #include "convex_hull.hpp"
 
+#include <unordered_map>
+
 class Triangulation {
 public:
     std::vector<Point> points;
@@ -11,6 +13,11 @@ public:
     void write(const std::string& fileName, bool debug = false);
 
 private:
-    std::vector<std::shared_ptr<Vertex>> vertices;
+    std::vector<std::shared_ptr<Face>> ptFaces;             // point idx -> face
+    std::unordered_map<std::shared_ptr<Face>,std::vector<int>> facePts;  // face idx -> point idx
     std::shared_ptr<Face> outerFace;
+    std::vector<std::shared_ptr<Vertex>> vertices;
+
+    void init();
+    void insertPoint(int ptIdx);
 };

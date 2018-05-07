@@ -1,6 +1,7 @@
 #pragma once
 
 #include <functional>
+#include <iostream>
 
 class Point {
 public:
@@ -9,6 +10,10 @@ public:
     Point(double xVal = 0, double yVal = 0) : x(xVal), y(yVal) {}
 
     bool operator==(const Point& rhs) const { return x == rhs.x && y == rhs.y; }
+    friend std::ostream& operator<<(std::ostream& os, const Point& pt) {
+        os << "(x=" << pt.x << ", y=" << pt.y << ")";
+        return os;
+    }
 };
 
 namespace std {

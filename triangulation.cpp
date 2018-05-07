@@ -4,6 +4,13 @@
 #include <iostream>
 
 void Triangulation::run() {
+    init();
+    for (int i = 0; i < points.size(); ++i) {
+        insertPoint(i);
+    }
+}
+
+void Triangulation::init() {
     // calculate bounding triangle
     double lx = points[0].x, ly = points[0].y, hx = lx, hy = ly;
     for (const auto& pt : points) {
@@ -19,29 +26,68 @@ void Triangulation::run() {
     vertices.push_back(std::make_shared<Vertex>((lx + hx) / 2, hy + width / 2 + margin)); // CCW
     
     // init DCEL
-    auto face = std::make_shared<Face>();
     for (int i = 0; i < 3; ++i) {
+        int j = (i==2) ? 0 : i + 1;
         auto& edge = vertices[i]->edge;
-        edge = std::make_shared<HalfEdge>();
-        edge->org = vertices[i];
-        edge->face = face;
-        edge->twin = std::make_shared<HalfEdge>();
-        edge->twin->face = face;
-        edge->twin->twin = vertices[i]->edge;
+        edge = HalfEdge::newEdge(vertices[i], vertices[j]);
     }
     for (int i = 0; i < 3; ++i) {
         int j = (i==2) ? 0 : i + 1;
         auto edge = vertices[i]->edge;
         auto nextEdge = vertices[j]->edge;
-        edge->twin->org = vertices[j];
-        edge->next = nextEdge;
-        nextEdge->prev = edge;
-        edge->twin->prev = nextEdge->twin;
-        nextEdge->twin->next = edge->twin;
+        HalfEdge::setNext(edge, nextEdge);
+        HalfEdge::setNext(nextEdge->twin, edge->twin);
     }
-    face->edge = vertices[0]->edge;
-    outerFace = std::make_shared<Face>();
-    outerFace->edge = vertices[0]->edge->twin;
+    auto face = Face::newFace(vertices[0]->edge);
+    outerFace = Face::newFace(vertices[0]->edge->twin);
+
+    // point - face mapping
+    auto& facePtIdxes = facePts[face];
+    ptFaces.resize(points.size());
+    for (int i = 0; i < points.size(); ++i) {
+        facePtIdxes.push_back(i);
+        ptFaces[i] = face;
+    }
+}
+
+void Triangulation::insertPoint(int ptIdx) {
+    auto face = ptFaces[ptIdx];
+    auto centerVextex = std::make_shared<Vertex>(points[ptIdx]);
+    vertices.push_back(centerVextex);
+    auto startEdge = face->edge;
+    // init
+    auto edge = startEdge;
+    do {
+        HalfEdge::setNext(edge, HalfEdge::newEdge(edge->twin->org, centerVextex));
+        edge = edge->prev;
+    }
+    while (edge != startEdge);
+    centerVextex->edge = startEdge->next->twin;
+    // connect
+    edge = startEdge;
+    std::vector<std::shared_ptr<Face>> faces;
+    do {
+        auto prevEdge = edge->prev;
+        HalfEdge::setNext(edge->next, edge->prev->next->twin);
+        HalfEdge::setNext(edge->prev->next->twin, edge);
+        faces.push_back(Face::newFace(edge));
+        edge = prevEdge;
+    }
+    while (edge != startEdge);
+    // divide points into sub faces (triangles)
+    std::vector<std::vector<int>> pts(faces.size());
+    for (int pt : facePts[face]) {
+        for (int i = 0; i < faces.size(); ++i) {
+            if (faces[i]->inFace(points[pt])) {
+                ptFaces[pt] = faces[i];
+                pts[i].push_back(pt);
+            }
+        }
+    }
+    for (int i = 0; i < faces.size(); ++i) {
+        facePts[faces[i]] = pts[i];
+    }
+    facePts.erase(face);
 }
 
 void Triangulation::write(const std::string& fileName, bool debug) {
