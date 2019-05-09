@@ -1,10 +1,10 @@
-# CSCI5010 Project - Incremental Delaunay Triangulation
+# Delaunay Triangulation
 
-### Gengjie Chen (SID: 1155067753)
+Project for CSCI5010@CUHK (2018 Spring)
 
-### 2018 Spring
+Gengjie Chen
 
-## Notes
+Reference: Lecture 13 of [Dave Mount's Lecture Notes](https://www.cse.cuhk.edu.hk/~taoyf/course/5010/notes/mount-cg2.pdf)
 
 ### Compile:
 ```
@@ -21,3 +21,8 @@ g++ -std=c++11 main.cpp triangulation.cpp dcel.cpp -o triangulation -O3 -DNDBUG
 ```
 ./draw <output_file>
 ```
+
+### Known Limitations:
+
+* Destructor of class `Triangulation` is not yet implemented.
+* Support bulk loading only. (Point-face relationship is maintained and updated together with the face-points relationship during the incremental insertion. The point-location data structure can enable incremental query.)
