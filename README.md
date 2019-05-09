@@ -4,6 +4,12 @@ Project for CSCI5010@CUHK (2018 Spring)
 
 Gengjie Chen
 
+\# points | time (s) | result
+-|-|-
+10 | 0.000139 | <img src="data/output/points10_0_output.png" width="250">
+100 | 0.00177 | <img src="data/output/points100_0_output.png" width="250">
+1000 | 0.0233 | <img src="data/output/points1000_0_output.png" width="250">
+
 Reference: Lecture 13 of [Dave Mount's Lecture Notes](https://www.cse.cuhk.edu.hk/~taoyf/course/5010/notes/mount-cg2.pdf)
 
 ### Compile:
