@@ -1,6 +1,6 @@
 # Delaunay Triangulation
 
-Project for CSCI5010@CUHK (2018 Spring)
+Project for CSCI5010@CUHK (Practical Computational Geometry Algorithms, 2018 Spring)
 
 Gengjie Chen
 
